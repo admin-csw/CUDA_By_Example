@@ -1,0 +1,34 @@
+# Build outputs
+bin/
+build/
+*.o
+*.obj
+*.exe
+
+# CUDA compiled files
+*.cubin
+*.fatbin
+*.ptx
+
+# Generated PPM images (too large for Git)
+*.ppm
+
+# IDE files
+.vscode/settings.json
+.vscode/launch.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*~
+*.tmp
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Dependencies
+*.d
