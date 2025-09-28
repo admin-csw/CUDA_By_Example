@@ -14,8 +14,8 @@ build/
 *.ppm
 
 # IDE files
-.vscode/settings.json
-.vscode/launch.json
+.vscode/
+*.code-workspace
 
 # OS files
 .DS_Store
