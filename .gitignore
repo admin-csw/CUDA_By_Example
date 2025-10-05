@@ -13,6 +13,9 @@ build/
 # Generated PPM images (too large for Git)
 *.ppm
 
+# Compressed files (generated dynamically)
+*.tar.gz
+
 # IDE files
 .vscode/
 *.code-workspace

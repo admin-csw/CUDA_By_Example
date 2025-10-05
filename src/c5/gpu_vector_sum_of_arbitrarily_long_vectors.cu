@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include "cuda_common.h"
 
-#define N 10
+#define N (33 * 1024)
 
 __global__ void add(int *a, int *b, int *c) {
-    int tid = blockIdx.x; // handle the data at this index
-    if (tid < N) {
+    int tid = threadIdx.x + blockIdx.x * blockDim.x; // handle the data at this index
+    while (tid < N) {
         c[tid] = a[tid] + b[tid];
+        tid += blockDim.x * gridDim.x;  // move to next element this thread should handle
     }
 }
 
@@ -29,16 +30,25 @@ int main(void) {
     HANDLE_ERROR(cudaMemcpy(dev_a, a, N * sizeof(int), cudaMemcpyHostToDevice));
     HANDLE_ERROR(cudaMemcpy(dev_b, b, N * sizeof(int), cudaMemcpyHostToDevice));    
 
-    add<<<N, 1>>>(dev_a, dev_b, dev_c);
+    add<<<128, 128>>>(dev_a, dev_b, dev_c);
 
     // copy the array 'c' back from the GPU to the CPU
     HANDLE_ERROR(cudaMemcpy(c, dev_c, N * sizeof(int), cudaMemcpyDeviceToHost));
 
-    // display the results
-    printf("Results for N=%d elements:\n", N);
+    // verify that the GPU did the work we requested
+    bool success = true;
     for (int i = 0; i < N; i++) {
-        printf("%d + %d = %d\n", a[i], b[i], c[i]);
+        if (c[i] != a[i] + b[i]) {
+            printf("Error: %d + %d != %d\n", a[i], b[i], c[i]);
+            success = false;
+            break;
+        }
     }
+
+    if (success) {
+        printf("We did it!\n");
+    }
+
 
     // free the memory allocated on the GPU
     HANDLE_ERROR(cudaFree(dev_a));
