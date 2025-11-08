@@ -102,6 +102,7 @@ int main(void) {
     int deviceCount;
     HANDLE_ERROR(cudaGetDeviceCount(&deviceCount));
 
+    /*
     if (deviceCount < 2) {
         printf(
             "We need at least two compute 1.0 or greater "
@@ -109,6 +110,7 @@ int main(void) {
             deviceCount);
         return 0;
     }
+    */
 
     float* a = (float*)malloc(N * sizeof(float));
     HANDLE_NULL(a);
@@ -128,7 +130,7 @@ int main(void) {
     data[0].a = a;
     data[0].b = b;
 
-    data[1].deviceID = 1;
+    data[1].deviceID = 0;
     data[1].size = N / 2;
     data[1].a = a + N / 2;
     data[1].b = b + N / 2;
